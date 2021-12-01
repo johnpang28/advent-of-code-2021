@@ -2,17 +2,17 @@ import Day01.countIncreases
 import Day01.input
 
 fun main() {
-    val answer1 = input.countIncreases()
+
+    val answer1 = input.zipWithNext().countIncreases()
     println(answer1) // 1709
 
-    val window = 3
-    val answer2 = (0..input.size - window).map { i -> (0 until window).sumOf { j -> input[i + j] } }.countIncreases()
+    val answer2 = input.dropLast(3).zip(input.drop(3)).countIncreases()
     println(answer2) // 1761
 }
 
 object Day01 {
 
-    fun List<Int>.countIncreases(): Int = zipWithNext().count { (a, b) -> b > a }
+    fun List<Pair<Int, Int>>.countIncreases(): Int = count { (a, b) -> b > a }
 
     val input: List<Int> = """
         191
