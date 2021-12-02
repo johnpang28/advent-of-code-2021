@@ -1,5 +1,5 @@
+import Day02.CommandRunner
 import Day02.Direction.*
-import Day02.execute
 import Day02.input
 import Day02.toCommand
 
@@ -7,19 +7,19 @@ fun main() {
 
     val commands = input.map { it.toCommand() }
 
-    val answer1 = commands.execute(mapOf(
+    val answer1 = CommandRunner(mapOf(
         Down    to { sub, cmd -> sub.copy(y = sub.y + cmd.distance) },
         Up      to { sub, cmd -> sub.copy(y = sub.y - cmd.distance) },
         Forward to { sub, cmd -> sub.copy(x = sub.x + cmd.distance) },
-    ))
+    )).run(commands)
 
     println(answer1) // 1690020
 
-    val answer2 = commands.execute(mapOf(
+    val answer2 = CommandRunner(mapOf(
         Down    to { sub, cmd -> sub.copy(aim = sub.aim + cmd.distance) },
         Up      to { sub, cmd -> sub.copy(aim = sub.aim - cmd.distance) },
         Forward to { sub, cmd -> sub.copy(x = sub.x + cmd.distance, y = sub.y + sub.aim * cmd.distance) },
-    ))
+    )).run(commands)
 
     println(answer2) // 1408487760
 }
@@ -30,8 +30,10 @@ object Day02 {
     data class Command(val direction: Direction, val distance: Int)
     data class Submarine(val x: Int, val y: Int, val aim: Int)
 
-    fun List<Command>.execute(commandMap: Map<Direction, (Submarine, Command) -> Submarine>): Int =
-        fold(Submarine(0, 0, 0)) { acc, n -> commandMap.getValue(n.direction)(acc, n) }.let { (x, y) -> x * y }
+    class CommandRunner(private val config: Map<Direction, (Submarine, Command) -> Submarine>) {
+        fun run(cmds: List<Command>): Int =
+            cmds.fold(Submarine(0, 0, 0)) { acc, n -> config.getValue(n.direction)(acc, n) }.let { (x, y) -> x * y }
+    }
 
     fun String.toCommand() =
         split(' ').let { (dir, dist) -> Command(Direction.valueOf(dir.capitalize()), dist.toInt()) }
