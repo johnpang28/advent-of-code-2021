@@ -1,3 +1,5 @@
+import Day02.Direction.*
+import Day02.execute
 import Day02.input
 import Day02.toCommand
 
@@ -5,32 +7,34 @@ fun main() {
 
     val commands = input.map { it.toCommand() }
 
-    val answer1 = commands.fold(0 to 0) { (ax, ay), n ->
-        when (n.direction) {
-            "down" -> ax to ay + n.distance
-            "up" -> ax to ay - n.distance
-            else -> ax + n.distance to ay
-        }
-    }.let { (x, y) -> x * y }
+    val answer1 = commands.execute(mapOf(
+        Down    to { sub, cmd -> sub.copy(y = sub.y + cmd.distance) },
+        Up      to { sub, cmd -> sub.copy(y = sub.y - cmd.distance) },
+        Forward to { sub, cmd -> sub.copy(x = sub.x + cmd.distance) },
+    ))
 
     println(answer1) // 1690020
 
-    val answer2 = commands.fold(listOf(0, 0, 0)) { acc, n ->
-        when (n.direction) {
-            "down" -> listOf(acc[0], acc[1], acc[2] + n.distance)
-            "up" -> listOf(acc[0], acc[1], acc[2] - n.distance)
-            else -> listOf(acc[0] + n.distance, acc[1] + acc[2] * n.distance, acc[2])
-        }
-    }.let { (x, y) -> x * y }
+    val answer2 = commands.execute(mapOf(
+        Down    to { sub, cmd -> sub.copy(aim = sub.aim + cmd.distance) },
+        Up      to { sub, cmd -> sub.copy(aim = sub.aim - cmd.distance) },
+        Forward to { sub, cmd -> sub.copy(x = sub.x + cmd.distance, y = sub.y + sub.aim * cmd.distance) },
+    ))
 
     println(answer2) // 1408487760
 }
 
 object Day02 {
 
-    data class Command(val direction: String, val distance: Int)
+    enum class Direction { Forward, Up, Down }
+    data class Command(val direction: Direction, val distance: Int)
+    data class Submarine(val x: Int, val y: Int, val aim: Int)
 
-    fun String.toCommand() = split(' ').let { (dir, dist) -> Command(dir, dist.toInt()) }
+    fun List<Command>.execute(commandMap: Map<Direction, (Submarine, Command) -> Submarine>): Int =
+        fold(Submarine(0, 0, 0)) { acc, n -> commandMap.getValue(n.direction)(acc, n) }.let { (x, y) -> x * y }
+
+    fun String.toCommand() =
+        split(' ').let { (dir, dist) -> Command(Direction.valueOf(dir.capitalize()), dist.toInt()) }
 
     val input: List<String> = """
         forward 4
