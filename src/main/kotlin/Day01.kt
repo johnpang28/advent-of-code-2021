@@ -6,7 +6,7 @@ fun main() {
     val answer1 = input.zipWithNext().countIncreases()
     println(answer1) // 1709
 
-    val answer2 = input.dropLast(3).zip(input.drop(3)).countIncreases()
+    val answer2 = input.zip(input.drop(3)).countIncreases()
     println(answer2) // 1761
 }
 
