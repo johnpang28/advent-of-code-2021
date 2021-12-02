@@ -5,11 +5,11 @@ fun main() {
 
     val commands = input.map { it.toCommand() }
 
-    val answer1 = commands.fold(listOf(0, 0)) { acc, n ->
+    val answer1 = commands.fold(0 to 0) { (ax, ay), n ->
         when (n.direction) {
-            "down" -> listOf(acc[0], acc[1] + n.distance)
-            "up" -> listOf(acc[0], acc[1] - n.distance)
-            else -> listOf(acc[0] + n.distance, acc[1])
+            "down" -> ax to ay + n.distance
+            "up" -> ax to ay - n.distance
+            else -> ax + n.distance to ay
         }
     }.let { (x, y) -> x * y }
 
