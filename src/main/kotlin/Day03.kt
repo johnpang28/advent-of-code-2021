@@ -1,43 +1,43 @@
 import Day03.co2
-import Day03.decimal
+import Day03.gamma
 import Day03.input
 import Day03.invert
-import Day03.mostCommonBit
 import Day03.oxygen
+import Day03.times
 import java.lang.Integer.parseInt
 
 fun main() {
 
-    val bitCount = input.first().length
-
-    val gamma = (0 until bitCount).map { i -> mostCommonBit(input, i) }.joinToString("")
-    val epsilon = gamma.invert()
-    val answer1 = gamma.decimal() * epsilon.decimal()
+    val answer1 = input.gamma().let { g -> g * g.invert() }
     println(answer1) // 3687446
 
-    val answer2 = input.oxygen().decimal() * input.co2().decimal()
+    val answer2 = input.oxygen() * input.co2()
     println(answer2) // 4406844
 }
 
 object Day03 {
 
-    val invert: (Char) -> Char = { if (it == '0') '1' else '0' }
+    fun List<String>.gamma(): String = (0 until first().length).map { i -> mostCommonBit(input, i) }.joinToString("")
+
+    fun List<String>.oxygen(): String = find(mostCommonBit)
+
+    fun List<String>.co2(): String = find { numbers, i -> invert(mostCommonBit(numbers, i)) }
 
     fun String.invert() = map { invert(it) }.joinToString("")
 
-    fun String.decimal() = parseInt(this, 2)
+    private val invert: (Char) -> Char = { if (it == '0') '1' else '0' }
 
-    val mostCommonBit: (List<String>, Int) -> Char = { numbers, bitIndex ->
+    operator fun String.times(other: String): Int = this.decimal() * other.decimal()
+
+    private fun String.decimal() = parseInt(this, 2)
+
+    private val mostCommonBit: (List<String>, Int) -> Char = { numbers, bitIndex ->
         mutableListOf<Char>().apply {
             numbers.forEach {
                 it[bitIndex].let { bit -> if (bit == '1') add(bit) else add(0, bit) }
             }
         }[numbers.size / 2]
     }
-
-    fun List<String>.oxygen(): String = find(mostCommonBit)
-
-    fun List<String>.co2(): String = find { numbers, i -> invert(mostCommonBit(numbers, i)) }
 
     private fun List<String>.find(matchFn: (List<String>, Int) -> Char): String {
 
