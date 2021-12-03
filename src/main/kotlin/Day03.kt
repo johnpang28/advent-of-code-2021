@@ -43,7 +43,10 @@ object Day03 {
 
         tailrec fun go(i: Int, acc: List<String>): List<String> =
             if (acc.size == 1) acc
-            else go(i + 1, acc.filter { it[i] == matchFn(acc, i) })
+            else {
+                val matchBit = matchFn(acc, i)
+                go(i + 1, acc.filter { it[i] == matchBit })
+            }
 
         return go(0, this).first()
     }
