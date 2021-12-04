@@ -39,7 +39,7 @@ object Day04 {
             lines = hLines + vLines
         }
 
-        fun isWin(drawn: List<Int>): Boolean = lines.any { drawn.containsAll(it) }
+        fun isWin(draw: List<Int>): Boolean = lines.any { draw.containsAll(it) }
 
         fun unmarked(draw: List<Int>): List<Int> = hLines.flatten().filter { !draw.contains(it) }
     }
