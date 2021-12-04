@@ -1,13 +1,12 @@
 import Day04.Board
 import Day04.Board.Companion.lineLength
-import Day04.commaDelimit
 import Day04.input
 import Day04.lastWinner
 import Day04.splitInts
 
 fun main() {
 
-    val drawSeq = input.first().splitInts(commaDelimit).let { nums -> (5 until nums.size).map { i -> nums.take(i) } }
+    val drawSeq = input.first().splitInts(",").let { nums -> (5 until nums.size).map { i -> nums.take(i) } }
     val boards = input.drop(2).filter { it.isNotBlank() }.chunked(lineLength).map { Board.from(it) }
 
     val (draw1, winner) = drawSeq.mapNotNull { d -> boards.firstOrNull { it.isWin(d) }?.let { d to it } }.first()
@@ -34,7 +33,7 @@ object Day04 {
 
         companion object {
             const val lineLength = 5
-            fun from(input: List<String>) = Board(input.map { it.trim().splitInts(spaceDelimit) })
+            fun from(input: List<String>) = Board(input.map { it.trim().splitInts(" ") })
         }
     }
 
@@ -42,10 +41,7 @@ object Day04 {
         if (boards.size == 1) boards.first().let { b -> drawSeq.first(b::isWin) to b }
         else lastWinner(boards.filterNot { it.isWin(drawSeq.first()) }, drawSeq.drop(1))
 
-    fun String.splitInts(delimiter: Regex): List<Int> = split(delimiter).map { it.toInt() }
-
-    val spaceDelimit = " +".toRegex()
-    val commaDelimit = ",".toRegex()
+    fun String.splitInts(delimiter: String): List<Int> = split(delimiter).filter { it.isNotEmpty() }.map { it.toInt() }
 
     val input: List<String> = """
         0,56,39,4,52,7,73,57,65,13,3,72,69,96,18,9,49,83,24,31,12,64,29,21,80,71,66,95,2,62,68,46,11,33,74,88,17,15,5,6,98,30,51,78,76,75,28,53,87,48,20,22,55,86,82,90,47,19,25,1,27,60,94,38,97,58,70,10,43,40,89,26,34,32,23,45,50,91,61,44,35,85,63,16,99,92,8,36,81,84,79,37,93,67,59,54,41,77,42,14
