@@ -1,60 +1,51 @@
+import Day04.Board
+import Day04.Board.Companion.lineLength
 import Day04.commaDelimit
 import Day04.input
+import Day04.lastWinner
 import Day04.splitInts
-import Day04.toBoards
 
 fun main() {
 
     val drawSeq = input.first().splitInts(commaDelimit).let { nums -> (5 until nums.size).map { i -> nums.take(i) } }
-    val boards = input.toBoards()
+    val boards = input.drop(2).filter { it.isNotBlank() }.chunked(lineLength).map { Board.from(it) }
 
     val (draw1, winner) = drawSeq.mapNotNull { d -> boards.firstOrNull { it.isWin(d) }?.let { d to it } }.first()
     val answer1 = winner.unmarked(draw1).sum() * draw1.last()
     println(answer1) // 45031
 
-    run part2@{
-        val unmatched = boards.toMutableList()
-        drawSeq.forEach { draw ->
-            val matched = unmatched.filter { it.isWin(draw) }
-            unmatched.removeAll(matched)
-            if (unmatched.isEmpty()) {
-                val answer2 = matched.first().unmarked(draw).sum() * draw.last()
-                println(answer2) // 2568
-                return@part2
-            }
-        }
-    }
+    val (draw2, lastWinner) = lastWinner(boards, drawSeq)
+    val answer2 = lastWinner.unmarked(draw2).sum() * draw2.last()
+    println(answer2) // 2568
 }
-
-typealias BingoLine = List<Int>
 
 object Day04 {
 
-    data class Board(val hLines: List<BingoLine>) {
+    data class Board(val hLines: List<List<Int>>) {
 
-        private val lines: List<BingoLine>
-
-        init {
-            val vLines = (0 until lineLength).map { i -> hLines.map { it[i] } }
-            lines = hLines + vLines
-        }
-
-        fun isWin(draw: List<Int>): Boolean = lines.any { draw.containsAll(it) }
+        fun isWin(draw: List<Int>): Boolean =
+            (hLines + (0 until lineLength).map { i ->
+                (0 until lineLength).map { j ->
+                    hLines[j][i]
+                }
+            }).any { draw.containsAll(it) }
 
         fun unmarked(draw: List<Int>): List<Int> = hLines.flatten().filter { !draw.contains(it) }
+
+        companion object {
+            const val lineLength = 5
+            fun from(input: List<String>) = Board(input.map { it.trim().splitInts(spaceDelimit) })
+        }
     }
 
-    fun List<String>.toBoards(): List<Board> {
-        val boardInput = drop(2).filter { it.isNotBlank() }.map { it.trim().splitInts(spaceDelimit) }
-        return boardInput.windowed(lineLength, lineLength).map { Board(it) }
-    }
+    tailrec fun lastWinner(boards: List<Board>, drawSeq: List<List<Int>>): Pair<List<Int>, Board> =
+        if (boards.size == 1) boards.first().let { b -> drawSeq.first(b::isWin) to b }
+        else lastWinner(boards.filterNot { it.isWin(drawSeq.first()) }, drawSeq.drop(1))
 
     fun String.splitInts(delimiter: Regex): List<Int> = split(delimiter).map { it.toInt() }
 
     val spaceDelimit = " +".toRegex()
     val commaDelimit = ",".toRegex()
-
-    private const val lineLength = 5
 
     val input: List<String> = """
         0,56,39,4,52,7,73,57,65,13,3,72,69,96,18,9,49,83,24,31,12,64,29,21,80,71,66,95,2,62,68,46,11,33,74,88,17,15,5,6,98,30,51,78,76,75,28,53,87,48,20,22,55,86,82,90,47,19,25,1,27,60,94,38,97,58,70,10,43,40,89,26,34,32,23,45,50,91,61,44,35,85,63,16,99,92,8,36,81,84,79,37,93,67,59,54,41,77,42,14
