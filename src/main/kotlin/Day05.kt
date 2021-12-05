@@ -1,7 +1,7 @@
 import Day05.Line
-import Day05.input
 import Day05.countOverlaps
-import kotlin.math.absoluteValue
+import Day05.input
+import kotlin.math.abs
 
 fun main() {
 
@@ -27,7 +27,7 @@ object Day05 {
         }
 
         fun diagCoords(): List<Coord>? =
-            if ((p1.x - p2.x).absoluteValue == (p1.y - p2.y).absoluteValue)
+            if (abs(p1.x - p2.x) == abs(p1.y - p2.y))
                 range(p1.x, p2.x).zip(range(p1.y, p2.y)).map { (x, y) -> Coord(x, y) }
             else null
 
