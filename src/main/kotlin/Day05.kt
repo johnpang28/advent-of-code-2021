@@ -1,16 +1,16 @@
 import Day05.Line
 import Day05.input
-import Day05.solve
+import Day05.countOverlaps
 import kotlin.math.absoluteValue
 
 fun main() {
 
     val lines = input.map { it.split(" -> ", ",") }.map { Line.from(it) }
 
-    val answer1 = lines.solve { it.axialCoords() ?: emptyList() }
+    val answer1 = countOverlaps(lines) { it.axialCoords() ?: emptyList() }
     println(answer1) // 5442
 
-    val answer2 = lines.solve { it.axialCoords() ?: it.diagCoords() ?: emptyList() }
+    val answer2 = countOverlaps(lines) { it.axialCoords() ?: it.diagCoords() ?: emptyList() }
     println(answer2) // 19571
 }
 
@@ -40,8 +40,8 @@ object Day05 {
         }
     }
 
-    fun List<Line>.solve(fn: (Line) -> List<Coord>): Int =
-        flatMap { fn(it) }.groupBy { it }.count { (_, v) -> v.size > 1 }
+    fun countOverlaps(lines: List<Line>, fn: (Line) -> List<Coord>): Int =
+        lines.flatMap { fn(it) }.groupBy { it }.count { (_, v) -> v.size > 1 }
 
     val input: List<String> = """
         62,963 -> 844,181
