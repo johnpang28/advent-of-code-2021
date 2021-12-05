@@ -18,17 +18,17 @@ object Day05 {
 
     data class Coord(val x: Int, val y: Int)
 
-    data class Line(val p1: Coord, val p2: Coord) {
+    data class Line(val c1: Coord, val c2: Coord) {
 
         fun axialCoords(): List<Coord>? = when {
-            p1.x == p2.x -> range(p1.y, p2.y).map { y -> Coord(p1.x, y) }
-            p1.y == p2.y -> range(p1.x, p2.x).map { x -> Coord(x, p1.y) }
+            c1.x == c2.x -> range(c1.y, c2.y).map { y -> Coord(c1.x, y) }
+            c1.y == c2.y -> range(c1.x, c2.x).map { x -> Coord(x, c1.y) }
             else -> null
         }
 
         fun diagCoords(): List<Coord>? =
-            if (abs(p1.x - p2.x) == abs(p1.y - p2.y))
-                range(p1.x, p2.x).zip(range(p1.y, p2.y)).map { (x, y) -> Coord(x, y) }
+            if (abs(c1.x - c2.x) == abs(c1.y - c2.y))
+                range(c1.x, c2.x).zip(range(c1.y, c2.y)).map { (x, y) -> Coord(x, y) }
             else null
 
         private fun range(a: Int, b: Int): List<Int> = if (a < b) (a..b).toList() else a.downTo(b).toList()
