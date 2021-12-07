@@ -15,31 +15,35 @@ fun main() {
     println(answer2) // 4406844
 }
 
+typealias GetBitAtIndex = (List<String>, Int) -> Char
+
 object Day03 {
 
-    fun List<String>.gamma(): String = (0 until first().length).map { i -> mostCommonBit(input, i) }.joinToString("")
+    fun List<String>.gamma(): String = (first().indices).map { mostCommonBit(this, it) }.joinToString("")
 
     fun List<String>.oxygen(): String = find(mostCommonBit)
 
-    fun List<String>.co2(): String = find { numbers, i -> invert(mostCommonBit(numbers, i)) }
+    fun List<String>.co2(): String = find(invert(mostCommonBit))
 
-    fun String.invert() = map { invert(it) }.joinToString("")
+    fun String.invert() = map { it.invert() }.joinToString("")
 
-    private val invert: (Char) -> Char = { if (it == '0') '1' else '0' }
+    private fun Char.invert(): Char = if (this == '0') '1' else '0'
+
+    private fun invert(fn: GetBitAtIndex): GetBitAtIndex = { numbers, i -> fn(numbers, i).invert() }
 
     operator fun String.times(other: String): Int = this.decimal() * other.decimal()
 
     private fun String.decimal() = parseInt(this, 2)
 
-    private val mostCommonBit: (List<String>, Int) -> Char = { numbers, bitIndex ->
+    private val mostCommonBit: GetBitAtIndex = { numbers, i ->
         mutableListOf<Char>().apply {
             numbers.forEach {
-                it[bitIndex].let { bit -> if (bit == '1') add(bit) else add(0, bit) }
+                it[i].let { bit -> if (bit == '1') add(bit) else add(0, bit) }
             }
         }[numbers.size / 2]
     }
 
-    private fun List<String>.find(matchFn: (List<String>, Int) -> Char): String {
+    private fun List<String>.find(matchFn: GetBitAtIndex): String {
 
         tailrec fun go(i: Int, acc: List<String>): List<String> =
             if (acc.size == 1) acc
