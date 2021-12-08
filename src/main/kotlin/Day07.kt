@@ -4,18 +4,18 @@ import kotlin.math.abs
 
 fun main() {
 
-    val answer1 = minFuel(input) { start, end -> abs(start - end) }
+    val answer1 = minFuel(input) { it }
     println(answer1) // 328262
 
-    val answer2 = minFuel(input) { start, end -> (1..abs(start - end)).sum() }
+    val answer2 = minFuel(input) { it * (it + 1) / 2 }
     println(answer2) // 90040997
 }
 
 object Day07 {
 
-    fun minFuel(starts: List<Int>, costFn: (Int, Int) -> Int): Int =
+    fun minFuel(starts: List<Int>, costFn: (Int) -> Int): Int =
         starts.sorted().let { it.first() to it.last() }.let { (min, max) ->
-            (min..max).associateBy { end -> starts.sumOf { costFn(it, end) } }.minOf { it.key }
+            (min..max).associateBy { end -> starts.sumOf { costFn(abs(it - end)) } }.minOf { it.key }
         }
 
     val input: List<Int> =
