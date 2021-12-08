@@ -36,11 +36,7 @@ object Day03 {
     private fun String.decimal() = parseInt(this, 2)
 
     private val mostCommonBit: GetBitAtIndex = { numbers, i ->
-        mutableListOf<Char>().apply {
-            numbers.forEach {
-                it[i].let { bit -> if (bit == '1') add(bit) else add(0, bit) }
-            }
-        }[numbers.size / 2]
+        numbers.map { it[i] }.sorted()[numbers.size / 2]
     }
 
     private fun List<String>.find(matchFn: GetBitAtIndex): String {
