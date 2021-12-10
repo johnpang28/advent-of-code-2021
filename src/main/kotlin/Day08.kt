@@ -18,65 +18,38 @@ fun main() {
 
 object Day08 {
 
-    fun signalToNumber(signals: List<String>): Map<String, Int> {
+    fun signalToNumber(signals: List<String>): Map<Set<Char>, Int> {
+        val signalsAsChars = signals.map { it.toSet() }
 
         // omg!
+        val one = signalsAsChars.itemWithLength(2)
+        val four = signalsAsChars.itemWithLength(4)
+        val seven = signalsAsChars.itemWithLength(3)
+        val eight = signalsAsChars.itemWithLength(7)
+        val nine = signalsAsChars.minusElement(eight).first { it.containsAll(four + seven) }
+        val zero = signalsAsChars.minusElement(eight).first { it.containsAll(eight - four + one) }
+        val six = signalsAsChars.minus(setOf(eight, zero)).first { it.containsAll(zero - one) }
+        val five = six - (eight - nine)
+        val three = eight - ((zero - one) - (nine - four))
+        val two = signalsAsChars.filterNot { setOf(zero, one, three, four, five, six, seven, eight, nine).contains(it) }.first()
 
-        val signalMap = mutableMapOf<Char, Char>()
-        val signalsToNumberMap = mutableMapOf<String, Int>()
-
-        val one = signals.itemWithLength(2).also { signalsToNumberMap[it] = 1 }
-        val four = signals.itemWithLength(4).also { signalsToNumberMap[it] = 4 }
-        val seven = signals.itemWithLength(3).also { signalsToNumberMap[it] = 7 }
-        val eight = signals.itemWithLength(7).also { signalsToNumberMap[it] = 8 }
-
-        val remainingSignals: MutableSet<String> = signals.toMutableSet()
-            .also { it.removeAll(setOf(one, four, seven, eight)) }
-
-        signalMap['a'] = (seven.toSet() - one.toSet()).first()
-
-        val six = remainingSignals.first { it.length == 6 && !it.toSet().containsAll(one.toSet()) }.also {
-            remainingSignals.remove(it)
-            signalsToNumberMap[it] = 6
-        }
-
-        signalMap['c'] = (eight.toSet() - six.toSet()).first()
-        signalMap['f'] = (seven.toSet() - setOfNotNull(signalMap['a'], signalMap['c'])).first()
-
-        remainingSignals.first {
-            it.length == 5 && it.toSet().containsAll(setOfNotNull(signalMap['a'], signalMap['c'], signalMap['f']))
-        }.also {
-            remainingSignals.remove(it)
-            signalsToNumberMap[it] = 3
-        }
-
-        remainingSignals.first { it.length == 5 && it.toSet().contains(signalMap['c']) }.also {
-            remainingSignals.remove(it)
-            signalsToNumberMap[it] = 2
-        }
-
-        val five = remainingSignals.first { it.length == 5 }.also {
-            remainingSignals.remove(it)
-            signalsToNumberMap[it] = 5
-        }
-
-        signalMap['e'] = (six.toSet() - five.toSet()).first()
-
-        remainingSignals.first { it.length == 6 && it.toSet().contains(signalMap['e']) }.also {
-            remainingSignals.remove(it)
-            signalsToNumberMap[it] = 0
-        }
-
-        remainingSignals.first { it.length == 6 }.also {
-            signalsToNumberMap[it] = 9
-        }
-
-        return signalsToNumberMap
+        return mapOf(
+            zero to 0,
+            one to 1,
+            two to 2,
+            three to 3,
+            four to 4,
+            five to 5,
+            six to 6,
+            seven to 7,
+            eight to 8,
+            nine to 9,
+        )
     }
 
-    fun Map<String, Int>.getWithScrambledKey(key: String): Int = getValue(keys.first { key.toSet() == it.toSet() })
+    fun Map<Set<Char>, Int>.getWithScrambledKey(key: String): Int = getValue(keys.first { key.toSet() == it })
 
-    private fun List<String>.itemWithLength(n: Int) = first { it.length == n }
+    private fun List<Set<Char>>.itemWithLength(n: Int) = first { it.size == n }
 
     fun parseLine(line: String): Pair<List<String>, List<String>> =
         line.split(" | ").map { it.split(" ") }.let { (signals, output) -> signals to output }
