@@ -10,7 +10,7 @@ fun main() {
     println(answer1) // 3510
 
     val answer2 = routeCount(pathMap) { route, cave ->
-        route.smallCave2Visits == null || (cave != route.smallCave2Visits && !route.smallCaves.contains(cave))
+        route.smallCave2Visits == null || route.smallCave2Visits != cave && !route.smallCaves.contains(cave)
     }
     println(answer2) // 122880
 }
