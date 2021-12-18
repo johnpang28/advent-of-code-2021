@@ -5,11 +5,11 @@ import Day13.Paper
 import Day13.input
 
 fun main() {
-    
+
     val (paper, folds) = input.split("\n\n").let { (paperIn, foldIn) ->
         Paper.from(paperIn) to foldIn.lines().map { Fold.from(it) }
     }
-    
+
     val answer1 = paper.fold(folds.first()).dots.count()
     println(answer1) // 731
 
@@ -22,10 +22,10 @@ object Day13 {
     enum class Direction { Horizontal, Vertical }
     data class Coord(val x: Int, val y: Int)
 
-    data class Paper(val xMin: Int, val xMax: Int, val yMin: Int, val yMax: Int, val dots:Set<Coord>) {
+    data class Paper(val xMin: Int, val xMax: Int, val yMin: Int, val yMax: Int, val dots: Set<Coord>) {
 
         private fun flipUp() = Paper(xMin, xMax, 0, yMax - yMin, dots.map { it.copy(y = yMax - it.y) }.toSet())
-        private fun flipLeft() = Paper(0, xMax - xMin, yMin, yMax, dots.map { it.copy(x =  xMax - it.x) }.toSet())
+        private fun flipLeft() = Paper(0, xMax - xMin, yMin, yMax, dots.map { it.copy(x = xMax - it.x) }.toSet())
 
         private fun Set<Coord>.shift(fn: (Coord) -> Coord) = map { fn(it) }.toSet()
         private fun Set<Coord>.shiftDown(delta: Int) = shift { it.copy(y = it.y + delta) }
