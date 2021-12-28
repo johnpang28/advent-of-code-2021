@@ -14,7 +14,7 @@ fun main() {
     val velocitiesWithHeight = (minXVelocity..target.xRange.last).flatMap { vx ->
         IntRange(target.yRange.first, maxYVelocity).mapNotNull { vy ->
             val v = Velocity(vx, vy)
-            target.getMaxHeightIfOnTarget(v)?.let { maxY -> v to maxY }
+            target.onTargetMaxHeight(v)?.let { maxY -> v to maxY }
         }
     }
 
@@ -44,7 +44,7 @@ object Day17 {
 
     data class Target(val xRange: IntRange, val yRange: IntRange) {
 
-        fun getMaxHeightIfOnTarget(v: Velocity): Int? {
+        fun onTargetMaxHeight(v: Velocity): Int? {
 
             tailrec fun go(accP: Position, accV: Velocity, maxY: Int): Int? =
                 if (isWithin(accP)) maxY
