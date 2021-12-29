@@ -9,7 +9,7 @@ fun main() {
     val drawSeq = input.first().splitInts(",").let { nums -> (5 until nums.size).map { i -> nums.take(i) } }
     val boards = input.drop(2).filter { it.isNotBlank() }.chunked(lineLength).map { Board.from(it) }
 
-    val (draw1, winner) = drawSeq.mapNotNull { d -> boards.firstOrNull { it.isWin(d) }?.let { d to it } }.first()
+    val (draw1, winner) = drawSeq.firstNotNullOf { d -> boards.firstOrNull { it.isWin(d) }?.let { d to it } }
     val answer1 = winner.unmarked(draw1).sum() * draw1.last()
     println(answer1) // 45031
 
