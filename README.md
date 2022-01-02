@@ -1,6 +1,6 @@
 ### Advent of Code 2021
 
-Here are my solutions to Advent of Code 2021 written in kotlin (38/50 ⭐)
+Here are my solutions to Advent of Code 2021 written in kotlin (40/50 ⭐)
 
 https://adventofcode.com/2021/about
 
@@ -10,9 +10,9 @@ https://adventofcode.com/2021/about
 | ⭐⭐ | ⭐⭐ | ⭐⭐ | ⭐⭐ | ⭐⭐ | ⭐⭐ | ⭐⭐ | ⭐⭐ | ⭐⭐ | ⭐⭐ |
 
 
-| [11](src/main/kotlin/Day11.kt) | [12](src/main/kotlin/Day12.kt) | [13](src/main/kotlin/Day13.kt) | [14](src/main/kotlin/Day14.kt) | [15](src/main/kotlin/Day15.kt) | [16](src/main/kotlin/Day16.kt) | [17](src/main/kotlin/Day17.kt) | [18](src/main/kotlin/Day18.kt) | [19](src/main/kotlin/Day19.kt) | 20 |
+| [11](src/main/kotlin/Day11.kt) | [12](src/main/kotlin/Day12.kt) | [13](src/main/kotlin/Day13.kt) | [14](src/main/kotlin/Day14.kt) | [15](src/main/kotlin/Day15.kt) | [16](src/main/kotlin/Day16.kt) | [17](src/main/kotlin/Day17.kt) | [18](src/main/kotlin/Day18.kt) | [19](src/main/kotlin/Day19.kt) | [20](src/main/kotlin/Day20.kt) |
 |----|----|----|----|----|----|----|----|----|----|
-| ⭐⭐ | ⭐⭐ | ⭐⭐ | ⭐⭐ | ⭐⭐ | ⭐⭐ | ⭐⭐ | ⭐⭐ | ⭐⭐ | ☆ ☆ |
+| ⭐⭐ | ⭐⭐ | ⭐⭐ | ⭐⭐ | ⭐⭐ | ⭐⭐ | ⭐⭐ | ⭐⭐ | ⭐⭐ | ⭐⭐ |
 
 | 21 | 22 | 23 | 24 | 25 |
 |----|----|----|----|----|
