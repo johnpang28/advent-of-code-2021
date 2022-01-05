@@ -98,24 +98,19 @@ object Day18 {
     }
 
     fun parse(s: String): SnailFishNumber {
-        val ns = Stack<Number>()
-        val ops = Stack<Char>()
+        val stack = Stack<Number>()
 
         s.forEach { c ->
             when {
-                c == '[' -> ops.push(c)
-                c == ',' -> ops.push(c)
-                c == ']' && ops.peek() == ',' -> ops.pop()
-                ops.peek() == '[' && c.isDigit() -> ns.push(RegularNumber(c.digitToInt()))
-                ops.peek() == ',' && c.isDigit() -> ns.push(SnailFishNumber(ns.pop(), RegularNumber(c.digitToInt())))
-                else -> {
-                    val r = ns.pop()
-                    val l = ns.pop()
-                    ns.push(SnailFishNumber(l, r))
+                c.isDigit() -> stack.push(RegularNumber(c.digitToInt()))
+                c == ']' -> {
+                    val r = stack.pop()
+                    val l = stack.pop()
+                    stack.push(SnailFishNumber(l, r))
                 }
             }
         }
-        return ns.pop() as SnailFishNumber
+        return stack.pop() as SnailFishNumber
     }
 
     // Taken from my solution to day 1, 2020
